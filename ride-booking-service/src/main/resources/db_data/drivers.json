@@ -1,0 +1,88 @@
+[
+    {
+      "name": "John Evans",
+      "status": "AVAILABLE",
+      "rating": 3.5,
+      "totalRides": 300,
+      "location": {
+        "type": "Point",
+        "coordinates": [-74.0060, 40.7128]
+      },
+      "vehicle": {
+        "make": "Nissan",
+        "model": "Altima",
+        "licensePlate": "AS 1234-21"
+      },
+      "createdAt": "2020-05-01T09:30:00.000",
+      "lastOnlineAt": "2022-05-01T09:30:00.000"
+    },
+    {
+      "name": "James Bond",
+      "status": "OFFLINE",
+      "rating": 3.0,
+      "totalRides": 120,
+      "location": {
+        "type": "Point",
+        "coordinates": [-118.2437, 34.0522]
+      },
+      "vehicle": {
+        "make": "Toyota",
+        "model": "vitz",
+        "licensePlate": "GR 5678-17"
+      },
+      "createdAt": "2021-04-01T09:30:00.000",
+      "lastOnlineAt": "2022-07-01T09:30:00.000"
+    },
+    {
+      "name": "Michael Johnson",
+      "status": "ON_TRIP",
+      "rating": 3.9,
+      "totalRides": 114,
+      "location": {
+        "type": "Point",
+        "coordinates": [-0.1278, 51.5074]
+      },
+      "vehicle": {
+        "make": "Honda",
+        "model": "Fit",
+        "licensePlate": "GB 9876-24"
+      },
+      "createdAt": "2019-05-01T09:30:00.000",
+      "lastOnlineAt": "2024-01-01T09:30:00.000"
+    },
+    {
+      "name": "Enock Ashley",
+      "status": "BUSY",
+      "rating": 4.4,
+      "totalRides": 203,
+      "location": {
+        "type": "Point",
+        "coordinates": [2.3522, 48.8566]
+      },
+      "vehicle": {
+        "make": "Hyundai",
+        "model": "i10",
+        "licensePlate": "DV 3456-20"
+      },
+      "createdAt": "2023-01-01T09:30:00.000",
+      "lastOnlineAt": "2024-07-01T09:30:00.000"
+    },
+    {
+      "name": "Chris Armah",
+      "status": "AVAILABLE",
+      "rating": 4.8,
+      "totalRides": 1020,
+      "location": {
+        "type": "Point",
+        "coordinates": [151.2093, -33.8688]
+      },
+      "vehicle": {
+        "make": "Kia",
+        "model": "Picanto",
+        "licensePlate": "WR 2345-22"
+      },
+      "createdAt": "2018-05-01T09:30:00.000",
+      "lastOnlineAt": "2024-09-10T09:30:00.000"
+    }
+  ]
+  

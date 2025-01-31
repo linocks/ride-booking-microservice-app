@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: ride-booking-service
+          uri: http://localhost:9095
+          predicates:
+            - Path=/api/v1/rides/**
+        - id: ride-dispatch-service
+          uri: http://localhost:9096
+          predicates:
+            - Path=/api/v1/dispatch/**
+  config:
+    import: "optional:configserver:http://localhost:8888/api-gateway"
+
+# trace configuration
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+server:
+  port: 8081
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    registerWithEureka: true
+    fetchRegistry: true
+    healthcheck:
+      enabled: true
+  instance:
+    hostname: localhost
+    preferIpAddress: false
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30

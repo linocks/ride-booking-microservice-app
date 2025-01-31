@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: config-server
+  config:
+    activate:
+      on-profile: cloud
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/linocks/ride-config
+          default-label: main
+          clone-on-start: true
+
+# eureka configuration
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_ADDRESS}
+    registerWithEureka: true
+    fetchRegistry: true
+    registry-fetch-interval-seconds: 10
+    healthcheck:
+      enabled: true
+  instance:
+    hostname: eureka-server
+    preferIpAddress: false
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+
+server:
+  port: 8888

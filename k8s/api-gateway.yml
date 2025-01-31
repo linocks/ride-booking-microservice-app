@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  labels:
+    app: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: knocksto/api-gateway:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
+        env:
+          - name: EUREKA_SERVER_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: eureka-server-cm
+                key: eureka_server_address
+      initContainers:
+      - name: wait-for-config
+        image: busybox
+        command: ['sh', '-c', 'until [ -n "$EUREKA_SERVER_ADDRESS" ]; do echo "Waiting for config..."; sleep 2; done']
+        env:
+          - name: EUREKA_SERVER_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: eureka-server-cm
+                key: eureka_server_address
+
+---
+
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+  namespace: default
+spec:
+  selector:
+    app: api-gateway
+  type: NodePort
+  ports:
+  - name: api-gateway
+    protocol: TCP
+    port: 80
+    targetPort: 8081
+    nodePort: 30080
+

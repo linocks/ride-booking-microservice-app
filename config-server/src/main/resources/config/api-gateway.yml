@@ -1,0 +1,29 @@
+
+spring:
+  config:
+    activate:
+      on-profile: cloud
+
+# eureka configuration
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: localhost
+    registerWithEureka: true
+    fetchRegistry: true
+    healthcheck:
+      enabled: true
+  instance:
+    hostname: eureka-server
+    preferIpAddress: false
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+
+## trace configuration
+#management:
+#  tracing:
+#    sampling:
+#      probability: 1.0
+
+server:
+  port: 8081

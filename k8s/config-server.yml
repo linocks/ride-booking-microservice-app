@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-server
+  labels:
+    app: config-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-server
+  template:
+    metadata:
+      labels:
+        app: config-server
+    spec:
+      containers:
+        - name: config-server
+          image: knocksto/config-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8888
+          env:
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom: 
+                configMapKeyRef:
+                  name: eureka-server-cm
+                  key:  eureka_server_address
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-server
+  namespace: default
+spec:
+  selector:
+    app: config-server
+  type: ClusterIP
+  ports:
+    - name: config-server
+      protocol: TCP
+      port: 8888
+      targetPort: 8888

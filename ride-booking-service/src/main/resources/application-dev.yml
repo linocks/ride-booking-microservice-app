@@ -1,0 +1,68 @@
+spring:
+  security:
+    enabled: false
+  application:
+    name: ride-booking-service
+#  config:
+#    import: "optional:configserver:http://localhost:8888/ride-booking-service"
+
+  # mongoDB Configuration
+  data:
+    mongodb:
+      authentication-database: admin
+      database: ecabs
+      host: localhost
+      port: 27017
+      username: rootuser
+      password: rootpass
+      auto-index-creation: true
+
+  # rabbitmq configuration
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    queue:
+      name: rideRequests
+    exchange:
+      name: rideRequestsExchange
+    routing:
+      key: rideRequestsRoutingKey
+
+  # redis configuration
+
+redis:
+  host: localhost
+  port: 6379
+  cacheTtl: 5000
+
+ride:
+  request:
+    max-distance: 1000
+
+server:
+  port:
+    9095
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    registerWithEureka: true
+    fetchRegistry: true
+    healthcheck:
+      enabled: true
+  instance:
+    hostname: localhost
+    preferIpAddress: false
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+
+
+# trace configuration
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    endpoint: ${ZIPKIN_HOST:http://zipkin:9411/api/v2/spans}

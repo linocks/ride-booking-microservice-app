@@ -1,0 +1,84 @@
+# https://kubernetes.io/docs/concepts/configuration/configmap/
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: eureka-server-cm
+data:
+  # eureka-server: http://eureka-server-lb:80/eureka
+  eureka_server_address: http://eureka-server:8761/eureka
+---
+# Headless Service for StatefulSet
+kind: Service
+apiVersion: v1
+metadata:
+  name: eureka-server
+  labels:
+    app: eureka-server
+spec:
+  clusterIP: None
+  selector:
+    app: eureka-server
+  ports:
+    - port: 8761
+      targetPort: 8761
+
+---
+# NodePort Service for external access
+kind: Service
+apiVersion: v1
+metadata:
+  name: eureka-server-np
+spec:
+  selector:
+    app: eureka-server
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 8761
+      nodePort: 30001
+
+---
+# StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: eureka-server
+spec:
+  selector:
+    matchLabels:
+      app: eureka-server
+  serviceName: "eureka-server"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: eureka-server
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: eureka-server
+          image: knocksto/eureka-server:latest
+          ports:
+            - containerPort: 8761
+          env:
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-server-cm
+                  key: eureka_server_address
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8761
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8761
+            initialDelaySeconds: 30
+            periodSeconds: 10

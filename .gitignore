@@ -1,0 +1,12 @@
+*.idea/
+*.mvn
+target/
+*.class
+.DS_Store
+*.iml
+
+#Maven wrapper files
+!.mvn/wrapper/maven-wrapper.properties
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper-download.properties
+!.mvn/wrapper/maven-wrapper-script.jar

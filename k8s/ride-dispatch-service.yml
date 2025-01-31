@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ride-dispatch-service
+  labels:
+    app: ride-dispatch-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ride-dispatch-service
+  template:
+    metadata:
+      labels:
+        app: ride-dispatch-service
+    spec:
+      containers:
+        - name: ride-dispatch-service
+          image: knocksto/ride-dispatch-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9096
+          env:
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-server-cm
+                  key:  eureka_server_address
+      initContainers:
+        # Check Redis readiness
+        - name: check-redis
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z redis 6379; do echo waiting for redis; sleep 2; done;",
+            ]
+
+        # Check MongoDB readiness
+        - name: check-mongodb
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z mongodb 27017; do echo waiting for mongodb; sleep 2; done;",
+            ]
+
+        # Check RabbitMQ readiness
+        - name: check-rabbitmq
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z rabbitmq 5672; do echo waiting for rabbitmq; sleep 2; done;",
+            ]
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ride-dispatch-service
+  namespace: default
+spec:
+  selector:
+    app: ride-dispatch-service
+  type: ClusterIP
+  ports:
+    - name: ride-dispatch-service
+      protocol: TCP
+      port: 9096
+      targetPort: 9096

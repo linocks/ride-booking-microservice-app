@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: dispatch-service
+
+  #  zipkin:
+  #    base-url: http://zipkin:9411
+  #  sleuth:
+  #    sampler:
+  #      probability: 1.0
+
+  # mongoDB Configuration
+  data:
+    mongodb:
+      authentication-database: admin
+      database: ecabs
+      host: mongodb
+      port: 27017
+      username: rootuser
+      password: rootpass
+      auto-index-creation: true
+
+  # rabbitmq configuration
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+    queue:
+      name: rideRequests
+    exchange:
+      name: rideRequestsExchange
+    routing:
+      key: rideRequestsRoutingKey
+
+ride:
+  request:
+    max-distance: 1000
+
+server:
+  port:
+    9096
+
+# eureka configuration
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_ADDRESS}
+    registerWithEureka: true
+    fetchRegistry: true
+    registry-fetch-interval-seconds: 10
+    healthcheck:
+      enabled: true
+  instance:
+    hostname: eureka-server-0
+    preferIpAddress: false
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+
+
+# trace configuration
+#management:
+#  tracing:
+#    sampling:
+#      probability: 1.0
+#    endpoint: http://zipkin:9411/api/v2/spans

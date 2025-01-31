@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ride-booking-service
+  labels:
+    app: ride-booking-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ride-booking-service
+  template:
+    metadata:
+      labels:
+        app: ride-booking-service
+    spec:
+      containers:
+        - name: ride-booking-service
+          image: knocksto/ride-booking-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9095
+          env:
+            - name: REDIS_PORT
+              value: "6379"
+            - name: ZIPKIN_HOST
+              value: http://zipkin:9411/api/v2/spans
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-server-cm
+                  key: eureka_server_address
+      initContainers:
+        # Check Redis readiness
+        - name: check-redis
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z redis 6379; do echo waiting for redis; sleep 2; done;",
+            ]
+
+        # Check MongoDB readiness
+        - name: check-mongodb
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z mongodb 27017; do echo waiting for mongodb; sleep 2; done;",
+            ]
+
+        # Check RabbitMQ readiness
+        - name: check-rabbitmq
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z rabbitmq 5672; do echo waiting for rabbitmq; sleep 2; done;",
+            ]
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ride-booking-service
+  namespace: default
+spec:
+  selector:
+    app: ride-booking-service
+  type: ClusterIP
+  ports:
+    - name: ride-booking-service
+      protocol: TCP
+      port: 9095
+      targetPort: 9095

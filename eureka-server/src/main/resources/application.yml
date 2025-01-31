@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: Eureka Server
+
+server:
+  port: 8761
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+---
+spring:
+  config:
+    activate:
+      on-profile: cloud
+  application:
+    name: Eureka Server
+
+eureka:
+  instance:
+    hostname: ${HOSTNAME}
+    instance-id: ${HOSTNAME}
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    registry-fetch-interval-seconds: 10
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone:
+      - http://eureka-server-0.eureka-server.default.svc.cluster.local:8761/eureka/
+      - http://eureka-server-1.eureka-server.default.svc.cluster.local:8761/eureka/
+      - http://eureka-server-2.eureka-server.default.svc.cluster.local:8761/eureka/
+  server:
+    enable-self-preservation: false  # Disable emergency threshold mode
+    eviction-interval-timer-in-ms: 30000  # Reduce eviction check time (default is 60s)
+    instance:
+      lease-expiration-duration-in-seconds: 120  # Default is 90s (adjust as needed)
+      lease-renewal-interval-in-seconds: 30
+
+server:
+  port:
+    8761

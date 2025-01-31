@@ -1,0 +1,76 @@
+spring:
+  application:
+    name: ride-booking-service
+  config:
+    activate:
+      on-profile: cloud
+  # mongoDB Configuration
+  data:
+    mongodb:
+      authentication-database: admin
+      database: ecabs
+      host: mongodb
+      port: 27017
+      username: rootuser
+      password: rootpass
+      auto-index-creation: true
+
+  # rabbitmq configuration
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+    queue:
+      name: rideRequests
+    exchange:
+      name: rideRequestsExchange
+    routing:
+      key: rideRequestsRoutingKey
+
+  # redis configuration
+  cache:
+    type: redis
+  redis:
+    host: redis
+    port: 6379
+    time-to-live: 5000
+
+ride:
+  request:
+    max-distance: 1000
+
+server:
+  port:
+    9095
+
+# eureka configuration
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_ADDRESS}
+    registerWithEureka: true
+    fetchRegistry: true
+    healthcheck:
+      enabled: true
+  instance:
+    hostname: eureka-server-0
+    preferIpAddress: false
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+
+
+# trace configuration
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+
+
+
+
+
+
+
+
